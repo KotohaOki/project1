@@ -53,12 +53,6 @@ class ProductController extends Controller
             'img_path' => $request->get('img_path'),
         ]);
 
-        if($request->hasFile('img_path')){ 
-            $filename = $request->img_path->getClientOriginalName();
-            $filePath = $request->img_path->storeAs('products', $filename, 'public');
-            $product->img_path = '/storage/' . $filePath;
-        }
-
         DB::beginTransaction();
         try {
             $product->product_name = $request->product_name;
@@ -66,14 +60,21 @@ class ProductController extends Controller
             $product->price= $request->price;
             $product->stock = $request->stock;
             $product->comment = $request->comment;
+
+            if($request->hasFile('img_path')){ 
+                $filename = $request->img_path->getClientOriginalName();
+                $filePath = $request->img_path->storeAs('products', $filename, 'public');
+                $product->img_path = '/storage/' . $filePath;
+            }
+
             $product->save();
             DB::commit();
+
         } catch (\Exception $e) {
             DB::rollback();
             return back();
         }
 
-        $product->save();
         return back();
     }
 
@@ -94,12 +95,6 @@ class ProductController extends Controller
             'stock' => 'required',
         ]);
 
-        if($request->hasFile('img_path')){ 
-            $filename = $request->img_path->getClientOriginalName();
-            $filePath = $request->img_path->storeAs('products', $filename, 'public');
-            $product->img_path = '/storage/' . $filePath;
-        }
-
         DB::beginTransaction();
         try {
             $product->product_name = $request->product_name;
@@ -107,14 +102,21 @@ class ProductController extends Controller
             $product->price = $request->price;
             $product->stock = $request->stock;
             $product->comment = $request->comment;
+
+            if($request->hasFile('img_path')){ 
+                $filename = $request->img_path->getClientOriginalName();
+                $filePath = $request->img_path->storeAs('products', $filename, 'public');
+                $product->img_path = '/storage/' . $filePath;
+            }
+
             $product->save();
             DB::commit();
+
         } catch (\Exception $e) {
             DB::rollback();
             return back();
         }
 
-        $product->save();
         return back();
     }
 
