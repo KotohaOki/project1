@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -24,7 +25,7 @@ class ProductController extends Controller
 
         $products = $query->paginate(10);
         $companies = Company::all();
-        
+
         return view('products.index', compact('products', 'product_search', 'company_search', 'companies'));
     }
 
@@ -40,7 +41,7 @@ class ProductController extends Controller
             'price' => 'required',
             'stock' => 'required',
             'comment' => 'nullable', 
-            'img_path' => 'nullable|image|max:2048',
+            'img_path' => 'nullable', 
         ]);
 
         $product = new Product([
@@ -49,12 +50,27 @@ class ProductController extends Controller
             'price' => $request->get('price'),
             'stock' => $request->get('stock'),
             'comment' => $request->get('comment'),
+            'img_path' => $request->get('img_path'),
         ]);
 
         if($request->hasFile('img_path')){ 
             $filename = $request->img_path->getClientOriginalName();
             $filePath = $request->img_path->storeAs('products', $filename, 'public');
             $product->img_path = '/storage/' . $filePath;
+        }
+
+        DB::beginTransaction();
+        try {
+            $product->product_name = $request->product_name;
+            $product->company_id = $request->company_id;
+            $product->price= $request->price;
+            $product->stock = $request->stock;
+            $product->comment = $request->comment;
+            $product->save();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back();
         }
 
         $product->save();
@@ -78,18 +94,40 @@ class ProductController extends Controller
             'stock' => 'required',
         ]);
 
-        $product->product_name = $request->product_name;
-        $product->company_id = $request->company_id;
-        $product->price = $request->price;
-        $product->stock = $request->stock;
+        if($request->hasFile('img_path')){ 
+            $filename = $request->img_path->getClientOriginalName();
+            $filePath = $request->img_path->storeAs('products', $filename, 'public');
+            $product->img_path = '/storage/' . $filePath;
+        }
+
+        DB::beginTransaction();
+        try {
+            $product->product_name = $request->product_name;
+            $product->company_id = $request->company_id;
+            $product->price = $request->price;
+            $product->stock = $request->stock;
+            $product->comment = $request->comment;
+            $product->save();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back();
+        }
 
         $product->save();
-
         return back();
     }
 
     public function destroy(Product $product) {
-        $product->delete();
-        return redirect('/products');
+
+        try {
+            $product->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back();
+        }
+        
+        return redirect()->route('products.index');
     }
 }
