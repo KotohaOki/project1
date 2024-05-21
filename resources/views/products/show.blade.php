@@ -28,7 +28,7 @@
     </dl>
 
     <td>
-    <a href="{{ route('products.index') }}" class="btn btn-primary btn-sm mx-1">商品一覧に戻る</a>
+    <a href="{{ route('products.index') }}" class="btn btn-secondary btn-sm mx-1">商品一覧に戻る</a>
     <a href="{{ route('products.edit', $product) }}" class="btn btn-primary btn-sm mx-1">編集</a>
     </td>
 

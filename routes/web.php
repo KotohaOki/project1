@@ -26,7 +26,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
+Route::get('/products/index', [App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
+Route::get('/products/search', [App\Http\Controllers\ProductController::class, 'search'])->name('products.search');
+
 
 Route::get('/create',[App\Http\Controllers\ProductController::class, 'create'])->name('products.create');
 Route::post('/create',[App\Http\Controllers\ProductController::class, 'store'])->name('products.store');
@@ -36,7 +38,7 @@ Route::get('/show/{id}',[App\Http\Controllers\ProductController::class, 'show'])
 Route::get('/show/{id}/edit',[App\Http\Controllers\ProductController::class, 'edit'])->name('products.edit');
 Route::put('/show/{id}/edit',[App\Http\Controllers\ProductController::class, 'update'])->name('products.update');
 
-Route::delete('/products',[App\Http\Controllers\ProductController::class, 'destroy'])->name('products.destroy');
+Route::post('/products/{id}', [App\Http\Controllers\ProductController::class, 'destroy'])->name('products.destroy');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('products', ProductController::class);
