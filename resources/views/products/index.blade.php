@@ -78,7 +78,7 @@
                     <td><img src="{{ asset($product->img_path) }}" alt="商品画像" width="50" height="75"></td>
                     <td>
                         <a href="{{ route('products.show', $product) }}" class="btn btn-info btn-sm mx-1">詳細</a>
-                        <form method="POST" action="/products/{{ $product->id }}" class="d-inline">
+                        <form method="POST" action="{{ route('products.destroy', $product) }}"  class="d-inline">
                             @csrf
                             @method('DELETE')
                             <button data-product-id="{{ $product->id }}" class="delete-product btn btn-danger btn-sm mx-1" type="submit">削除</button>
@@ -93,8 +93,4 @@
     {{ $products->appends(request()->query())->links() }}
 
 </div>
-@endsection
-
-@section('scripts')
-<script src="{{ asset('/js/search.js') }}"></script>
 @endsection

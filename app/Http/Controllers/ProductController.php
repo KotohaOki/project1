@@ -167,7 +167,7 @@ class ProductController extends Controller
 
         return back();
     }
-    
+
     public function destroy(Request $request, Product $product) {
         try {
             DB::beginTransaction();
