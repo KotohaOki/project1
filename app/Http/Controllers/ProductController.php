@@ -72,7 +72,7 @@ class ProductController extends Controller
         $searchResults = $products->get();
         $companies = Company::all();
     
-        return view('search_results', compact('searchResults', 'companies'));
+        return view('products.search_results', compact('products', 'searchResults', 'companies'));
     }
 
     public function create() {

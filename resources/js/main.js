@@ -5,18 +5,19 @@ $(document).ready(function() {
         var formData = $(this).serialize();
         
         $.ajax({
-            url: '/search',
+            url: '/products/search',
             method: 'GET',
             data: formData,
-            success: function(response) { 
+            dataType: 'json',
+        })
+            .done(function(response) {
                 $('#search_results').html(response); 
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
+            })
+            .fail(function(xhr, status, error) {
+                alert('エラー');
+            })
         });
     });
-});
 
 $(document).ready(function()  {
     $('.delete-product').on('click', function(e) {
